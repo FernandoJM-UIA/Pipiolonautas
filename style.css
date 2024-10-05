@@ -1,0 +1,101 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+main{
+  position: absolute;
+  width: 100vw;
+  color: white;
+  z-index: 99;
+  width: 100%;
+  margin: 0px auto;
+  padding: 120px 0px;
+  display: none;
+  /* display: grid;
+  grid-template-columns: repeat(12, 1fr); */
+}
+canvas{
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+body {
+  color: #fff;
+}
+
+header {
+  /* background: linear-gradient(to right, #000428, #004e92); */
+  padding: 20px;
+  text-align: center;
+  color: white;
+  /* border-bottom: 3px solid #004e92; */
+}
+
+header h1 {
+  font-size: 2.5rem;
+}
+
+header p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+section {
+  padding: 40px;
+  text-align: center;
+}
+
+section h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+section p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+section ul {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+
+section ul li {
+  font-size: 1.1rem;
+  padding: 10px;
+  /* background-color: #002244; */
+  margin: 10px auto;
+  max-width: 600px;
+  border-radius: 5px;
+}
+
+.missions .mission {
+  /* background-color: #002244; */
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 600px;
+}
+
+.mission h3 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+section.animation {
+  background-color: #0a0a0a;
+}
+footer {
+  padding: 20px;
+  /* background-color: #001f3f; */
+  text-align: center;
+  font-size: 1rem;
+  color: #fff;
+  /* border-top: 3px solid #004e92; */
+}
