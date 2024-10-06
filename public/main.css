@@ -40,15 +40,24 @@ canvas{
 }
 
 
-
-#pencil-icon {
+.headerBar{
+  display: flex;
+  flex-direction: row;
   position: absolute;
   top: 10px;
-  left: 10px;
+  left: 18px;
+  justify-content: flex-start;
+  align-items: center;
+}
+#pencil-icon {
+  /* position: absolute;
+  top: 10px;
+  left: 10px; */
   cursor: pointer;
+  margin-right: 5px;
 }
 .Btn#pencil-icon{
-  /* position: relative; */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -93,9 +102,10 @@ canvas{
 }
 
 .bin-button#deleteDrawn{
-  position: absolute;
+  /* position: absolute;
   top: 17px;
-  left: 10%;
+  left: 10%; */
+  margin: 0px 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -127,9 +137,10 @@ canvas{
 }
 
 .button#undoBtn {
-  position: absolute;
+  /* position: absolute;
   top: 10px;
-  left: 185px;
+  left: 185px; */
+  margin-right: 5px;
   color: white;
   background-color: black;
   font-weight: 500;
@@ -175,9 +186,7 @@ canvas{
 }
 
 .button#newCons {
-  position: absolute;
-  top: 14px;
-  left: 310px;
+  /* position: absolute; */
   --main-focus: #2d8cf0;
   --font-color: #f0eded;
   --bg-color-sub: #525252;
@@ -194,7 +203,6 @@ canvas{
   background-color: var(--bg-color);
   border-radius: 10px;
   overflow: hidden;
-  position: absolute;
 }
 
 .button#newCons, #newCons .button__icon, #newCons .button__text {
@@ -209,9 +217,9 @@ canvas{
 
 .button#newCons .button__icon {
   position: absolute;
-  transform: translateX(109px);
-  height: 100%;
-  width: 39px;
+  transform: translateX(107px);
+  height: 70%;
+  width: 30px;
   background-color: var(--bg-color-sub);
   display: flex;
   align-items: center;
@@ -239,4 +247,358 @@ canvas{
 .button#newCons:active {
   transform: translate(3px, 3px);
   box-shadow: 0px 0px var(--main-color);
+}
+
+button#saveCons{
+  font-size: 15px;
+  background: #212121;
+  color: white;
+  fill: rgb(247, 242, 242);
+  padding: 0.5em .6em;
+  padding-left: 0.7em;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 15px;
+  font-weight: 1000;
+  margin: 0 10px;
+  /* position: absolute;
+  top: 15px;
+  left: 500px; */
+}
+
+button#saveCons span {
+  display: block;
+  margin-left: 0.3em;
+  transition: all 0.3s ease-in-out;
+}
+
+button#saveCons svg {
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.3s ease-in-out;
+}
+
+button#saveCons:hover {
+  background: #000;
+}
+
+button#saveCons:hover .svg-wrapper {
+  transform: scale(1.25);
+  transition: 0.5s linear;
+}
+
+button#saveCons:hover svg {
+  transform: translateX(1.2em) scale(1.1);
+  fill: #fff;
+}
+
+button#saveCons:hover span {
+  opacity: 0;
+  transition: 0.5s linear;
+}
+
+button#saveCons:active {
+  transform: scale(0.95);
+}
+
+/* Form to save Const */
+.form-container#saveForm{
+  transition: ease 0.3s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: linear-gradient(#212121, #212121) padding-box,
+              linear-gradient(145deg, transparent 35%,#e81cff, #40c9ff) border-box;
+  border: 2px solid transparent;
+  padding: 32px 24px;
+  font-size: 14px;
+  font-family: inherit;
+  color: white;
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  border-radius: 16px;
+}
+
+.form-container#saveForm button:active {
+  scale: 0.95;
+}
+
+.form-container#saveForm .form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-container#saveForm .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.form-container#saveForm .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #717171;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.form-container#saveForm .form-group input {
+  /* width: 100%; */
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #fff;
+  font-family: inherit;
+  background-color: transparent;
+  border: 1px solid #414141;
+}
+
+.form-container#saveForm .form-group textarea {
+  /* width: 100%; */
+  padding: 12px 16px;
+  border-radius: 8px;
+  resize: none;
+  color: #fff;
+  height: 96px;
+  border: 1px solid #414141;
+  background-color: transparent;
+  font-family: inherit;
+}
+
+.form-container#saveForm .form-group input::placeholder {
+  opacity: 0.5;
+}
+
+.form-container#saveForm .form-group input:focus {
+  outline: none;
+  border-color: #e81cff;
+}
+
+.form-container#saveForm .form-group textarea:focus {
+  outline: none;
+  border-color: #e81cff;
+}
+
+.form-container#saveForm .finalButtons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 20%
+}
+.form-container#saveForm .form-submit-btn {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  align-self: flex-start;
+  font-family: inherit;
+  color: #717171;
+  font-weight: 600;
+  width: 40%;
+  background: #313131;
+  border: 1px solid #414141;
+  padding: 12px 16px;
+  font-size: inherit;
+  gap: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.form-container#saveForm .form-submit-btn:hover {
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.paste-button#delete {
+  position: relative;
+  margin: 0 10px;
+  display: block;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#delete .button{
+  background-color: #272927;
+  color: #d4cfcf;
+  padding: 10px 15px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid transparent;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+#delete .dropdown-content {
+  display: none;
+  font-size: 13px;
+  position: absolute;
+  z-index: 1;
+  min-width: 150px;
+  background-color: #d3d3d3;
+  border: 2px solid #232423;
+  border-radius: 0px 15px 15px 15px;
+  box-shadow: 0px 8px 16px 0px rgba(44, 43, 43, 0.2);
+}
+
+#delete .dropdown-content a {
+  color: #282928;
+  padding: 8px 10px;
+  text-decoration: none;
+  display: block;
+  transition: 0.1s;
+}
+
+#delete .dropdown-content a:hover {
+  background-color: #474646;
+  color: #ccc2c2;
+}
+
+#delete .dropdown-content a:focus {
+  background-color: #d6d0d0;
+  color: #3a3f3a;
+}
+
+#delete .dropdown-content #top:hover {
+  border-radius: 0px 13px 0px 0px;
+}
+
+#delete .dropdown-content #bottom:hover {
+  border-radius: 0px 0px 13px 13px;
+}
+
+.paste-button#delete:hover button {
+  border-radius: 15px 15px 0px 0px;
+}
+
+/* .paste-button#delete:active .dropdown-content {
+  display: block;
+} */
+
+.form-container#uploadContainer {
+  transition: ease 0.3s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: linear-gradient(#212121, #212121) padding-box,
+              linear-gradient(145deg, transparent 35%,#e81cff, #40c9ff) border-box;
+  border: 2px solid transparent;
+  padding: 32px 24px;
+  font-size: 14px;
+  font-family: inherit;
+  color: white;
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  border-radius: 16px;
+}
+.custum-file-upload {
+  height: 200px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  gap: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #e8e8e8;
+  background-color: #212121;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 48px 35px -48px #e8e8e8;
+}
+
+#cancelUpload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  font-family: inherit;
+  color: #717171;
+  font-weight: 600;
+  width: 40%;
+  background: #313131;
+  border: 1px solid #414141;
+  padding: 12px 16px;
+  font-size: inherit;
+  gap: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#cancelUpload:hover {
+  background-color: #ffffff7a;
+  border-color: #ffffffaf;
+  color: white;
+}
+
+.custum-file-upload .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .icon svg {
+  height: 80px;
+  fill: #e8e8e8;
+}
+
+.custum-file-upload .text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .text span {
+  font-weight: 400;
+  color: #e8e8e8;
+}
+
+.custum-file-upload input {
+  display: none;
+}
+
+/* UploadFile */
+.button#uploadButton {
+  width: 10em;
+  height: 3em;
+  border-radius: 8px;
+  border: 0.15em solid rgb(28, 28, 29);
+  color: rgb(241, 239, 243);
+  background-color: #000000d3;
+  transition: all 0.5s ease;
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+.button#uploadButton .text {
+  display: none
+}
+
+.button#uploadButton:hover>.text {
+  display: block;
+}
+
+.button#uploadButton:hover>svg {
+  display: none;
+}
+
+.button#uploadButton:hover {
+  background-color: rgb(22, 22, 22);
+  color: #fff
+}
+
+.button#uploadButton svg {
+  width: 1.5em;
+  margin-top: 3px;
 }

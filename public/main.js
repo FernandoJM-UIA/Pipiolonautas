@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Line2 } from 'three/addons/lines/Line2.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+import html2canvas from 'html2canvas';
 
 // Scene == container
 const scene = new THREE.Scene();
@@ -11,6 +12,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
+  preserveDrawingBuffer: true
 });
 
 // Set renderer settings
@@ -91,6 +93,7 @@ const pencilIcon = document.getElementById('pencil-icon');
 let cameraControlsActive = true; // Camera status
 const selectedObjects = [];
 const raycaster = new THREE.Raycaster();
+const constSaved = [];
 
 // Arrays to hold points for the line
 const linePoints = [];
@@ -100,7 +103,11 @@ let line;
 let iCons = 1;
 
 document.addEventListener('mousedown', onMouseDown);
-pencilIcon.addEventListener('click', toggleCameraControl);
+pencilIcon.addEventListener('click', () => {
+  toggleCameraControl();
+  showSaveForm();
+});
+
 
 // Add the toggleCameraControl function
 function toggleCameraControl() {
@@ -235,6 +242,7 @@ function deleteDrawnLine() {
       linePoints.length = 0; // Clear the linePoints array
       iCons--;
       console.log("iCons" +iCons);
+      constSaved.pop();
   } else {
       console.log('No line to delete.');
   }
@@ -245,14 +253,16 @@ function deleteDrawnLineTotal() {
   console.log(iCons);
   let j;
   if (iCons >= 1) {
-      for (j = iCons; j >= 0; j--) { // Changed j == 0 to j >= 0
+      for (j = iCons; j >= 0; j--) {
           deleteDrawnLine();
       }
   } else {
       console.log('No lines to delete.');
   }
 }
-document.getElementById('deleteDrawn').addEventListener('click', deleteDrawnLineTotal);
+
+document.getElementById('deleteDrawn').addEventListener('click', deleteDrawnLine);
+document.getElementById('delete').addEventListener('click', deleteDrawnLineTotal);
 
 // Function to undo the last point
 function undoLastPoint() {
@@ -291,5 +301,155 @@ function createNewConstellation(){
 }
 
 document.getElementById('newCons').addEventListener('click', function() {
+  showSaveForm();
   createNewConstellation(); // Create a new constellation
 });
+
+function saveCanvasImage(){
+  // Use html2canvas to take a screenshot of the entire body element
+  html2canvas(document.body).then(function(canvas) {
+    // Convert the canvas to a data URL
+    const dataURL = canvas.toDataURL('image/png');
+
+    // Create a temporary link element
+    const link = document.createElement('a');
+    
+    // Set the download attribute with a file name
+    link.download = 'page-screenshot.png'; // You can set any name for the saved file
+    
+    // Set the href attribute to the canvas data URL
+    link.href = dataURL;
+    
+    // Programmatically click the link to trigger the download
+    link.click();
+  });
+}
+
+// Show the form to save constellation details
+function showSaveForm() {
+  document.getElementById('saveForm').style.display = 'flex';
+}
+
+// Cancel the save action
+function cancelSave() {
+  document.getElementById('saveForm').style.display = 'none';
+  document.getElementById('constellationName').value = '';
+  document.getElementById('constellationDesc').value = '';
+}
+
+document.getElementById('cancelSave').addEventListener('click', cancelSave);
+
+// prefilled save Form
+function preSave(event){
+  const name = document.getElementById('constellationName').value.trim();
+  const description = document.getElementById('constellationDesc').value.trim();
+
+  event.preventDefault();
+  if(!name || !description){
+    alert("Please fill all fields");
+    return;
+  }
+
+  // Store the name and description in the array
+  constSaved.push({name, description});
+  cancelSave(); 
+  console.log(constSaved);
+}
+document.getElementById('saveForm').addEventListener('submit', preSave);
+
+// Function to save the points
+function save(){
+  if(linePoints.length > 0){
+    constellations.push([...linePoints]); // Copy the current line points
+    console.log('Point saved', linePoints);
+    drawLine(true);
+    linePoints.length = 0;
+  }
+  // Prepare the data to be daved
+  const constellationData = {
+    exoplanet: "Not Define yet",
+    name: constSaved[0].name,
+    description: constSaved[0].description,
+    points: constellations[0],
+  };
+  console.log(constellationData);
+
+   // Convert to JSON format
+   const dataStr = JSON.stringify(constellationData, null, 2);
+
+   // Create a blob and a link to download the file
+   const blob = new Blob([dataStr], { type: 'application/json' });
+   const url = URL.createObjectURL(blob);
+   const a = document.createElement('a');
+   a.href = url;
+   a.download = `${name}.json`; // Use the constellation name for the file name
+   document.body.appendChild(a);
+   a.click();
+   document.body.removeChild(a);
+   URL.revokeObjectURL(url); // Clean up
+   saveCanvasImage();
+}
+document.getElementById('saveCons').addEventListener('click', save);
+
+function openUploadFiles(){
+  document.getElementById('uploadContainer').style.display = 'flex';
+}
+
+function closeUploadFiles(){
+  document.getElementById('uploadContainer').style.display = 'none';
+}
+
+document.getElementById('uploadButton').addEventListener('click', openUploadFiles);
+document.getElementById('cancelUpload').addEventListener('click', closeUploadFiles);
+
+// Listen for file upload
+document.getElementById('file').addEventListener('change', function(event) {
+  const file = event.target.files[0]; // Get the uploaded file
+  if (file) {
+    const reader = new FileReader();
+
+    // When the file is read
+    reader.onload = function(e) {
+      try {
+        // Parse the JSON data
+        const data = JSON.parse(e.target.result);
+        console.log("Loaded Data:", data);
+
+        // Extract points from the data and draw the constellation
+        if (data.points && data.points.length > 0) {
+          const linePoints = data.points.map(point => new THREE.Vector3(point.x, point.y, point.z));
+
+          // Call drawLine to draw the figure
+          drawLineFromData(linePoints);
+        } else {
+          console.error("No points data found in the uploaded file.");
+        }
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+    };
+
+    // Read the file as text
+    reader.readAsText(file);
+  }
+});
+
+// Function to draw the constellation based on uploaded data points
+function drawLineFromData(linePoints, removePrevious = true, lineColor = 0xcdf0f1, lineThickness = 5) {
+  const geometry = new THREE.BufferGeometry().setFromPoints(linePoints);
+  const material = new THREE.LineBasicMaterial({
+    color: lineColor,
+    linewidth: lineThickness
+  });
+
+  const line = new THREE.Line(geometry, material);
+  line.name = 'constellationLine'+iCons;
+  line.raycast = () => {}; // Prevent raycasting
+
+  // If removePrevious is true, remove the previous drawn line (if any)
+  if (removePrevious && scene.getObjectByName(line.name)) {
+    scene.remove(scene.getObjectByName(line.name));
+  }
+
+  scene.add(line); // Add the line to the scene
+}
