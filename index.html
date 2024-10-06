@@ -3,18 +3,185 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="./main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hackaton Challenge</title>
+    <title>Hackaton Challenge - Hackaton StarSketch</title>
   </head>
   <body>
-    <input type="text" id="modelInput" placeholder="Enter model name...">
-    <button id="updateButton">Update Models</button>
     <canvas id="bg"></canvas>
     <div id="tooltip" class="tooltip"></div>
   
-    <input type="text" id="searchBar" placeholder="Buscar planetas..." />
-    <div id="dropdown" class="dropdown"></div>
+    <div class="searchDropDown">
+      <input type="text" id="searchBar" placeholder="Buscar planetas..." />
+      <div id="dropdown" class="dropdown"></div>
+    </div>
+
     <div id="planetInfo"></div>
+
+    <div class="headerBar" >     
+      <!-- Pencil Object -->
+      <div class="toggle-cont" id="pencil-icon">
+        <input class="toggle-input" id="toggle" name="toggle" type="checkbox" />
+        <label class="toggle-label" for="toggle">
+          <div class="cont-icon">
+            <span
+              style="--width: 2; --deg: 25; --duration: 11"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 100; --duration: 18"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 280; --duration: 5"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 2; --deg: 200; --duration: 3"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 2; --deg: 30; --duration: 20"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 2; --deg: 300; --duration: 9"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 250; --duration: 4"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 2; --deg: 210; --duration: 8"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 2; --deg: 100; --duration: 9"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 15; --duration: 13"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 75; --duration: 18"
+              class="sparkle"
+            ></span>
+            <span style="--width: 2; --deg: 65; --duration: 6" class="sparkle"></span>
+            <span style="--width: 2; --deg: 50; --duration: 7" class="sparkle"></span>
+            <span
+              style="--width: 1; --deg: 320; --duration: 5"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 220; --duration: 5"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 215; --duration: 2"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 2; --deg: 135; --duration: 9"
+              class="sparkle"
+            ></span>
+            <span style="--width: 2; --deg: 45; --duration: 4" class="sparkle"></span>
+            <span
+              style="--width: 1; --deg: 78; --duration: 16"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 89; --duration: 19"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 2; --deg: 65; --duration: 14"
+              class="sparkle"
+            ></span>
+            <span style="--width: 2; --deg: 97; --duration: 1" class="sparkle"></span>
+            <span
+              style="--width: 1; --deg: 174; --duration: 10"
+              class="sparkle"
+            ></span>
+            <span
+              style="--width: 1; --deg: 236; --duration: 5"
+              class="sparkle"
+            ></span>
+            <svg viewBox="0 0 512 512" class="svg">
+              <path
+                d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
+              ></path>
+            </svg>
+          </div>
+        </label>
+      </div>
+      
+      <!-- Delete one -->
+      <div class="paste-button" id="deleteOne">
+        <button class="buttonGeneral">Delete One </button>
+      </div>
+
+      <!-- Delete all -->
+      <div class="paste-button" id="delete">
+        <button class="buttonGeneral">Delete  All</button>
+      </div>
+
+      <!-- undo object -->
+       <div class="paste-button" id="undoBtn">
+        <button class="buttonGeneral">Undo</button>
+      </div>
+
+      <!-- New Constelation Object -->
+      <div class="paste-button" id="newCons">
+        <button class="buttonGeneral">Add newCons</button>
+      </div>
+
+      <!-- Save button -->
+      <div class="paste-button" id="saveCons">
+        <button class="buttonGeneral">Save</button>
+      </div>
+
+      <!-- Upload file button -->
+      <div class="paste-button" id="uploadButton">
+        <button class="buttonGeneral">Upload File</button>
+      </div>
+    </div>
+
+    <!-- Form to save Constellation -->
+    <div class="form-container" id="saveForm">
+      <form class="form">
+        <div class="form-group">
+          <h3>Save Constellation</h3>
+          <label for="name">Name</label>
+          <input type="text" id="constellationName" name="name" required="">
+        </div>
+        <div class="form-group">
+          <label for="textarea">Description</label>
+          <textarea name="textarea" id="constellationDesc" rows="10" cols="50" required=""></textarea>
+        </div>
+        <div class="finalButtons">
+          <button class="form-submit-btn" type="submit" id="saveForm">Saved</button>
+          <button class="form-submit-btn" id="cancelSave" type="button"> Cancel </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Upload File -->
+    <div class="form-container" id="uploadContainer">
+      <label for="file" class="custum-file-upload">
+      <div class="icon">
+      <svg viewBox="0 0 24 24" fill="" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" fill=""></path> </g></svg>
+      </div>
+      <div class="text">
+        <span>Click to upload json document</span>
+        </div>
+        <!-- <input id="file" type="file" id="uploadJson"> -->
+        <input type="file" id="file" accept=".json" />
+      </label>  
+      <button id="cancelUpload" type="button"> Cancel </button>
+    </div>
+
 
     <script type="module" src="/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
