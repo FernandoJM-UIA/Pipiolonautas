@@ -15,12 +15,15 @@ pathinfo = "/tap-server/tap/async"
 params = urllib.urlencode({\
 	"REQUEST": "doQuery", \
 	"LANG":    "ADQL", \
-	"FORMAT":  "votable_plain", \
+	"FORMAT":  "csv", \
 	"PHASE":  "RUN", \
 	"JOBNAME":  "Any name (optional)", \
 	"JOBDESCRIPTION":  "Any description (optional)", \
-	"QUERY":   "SELECT TOP 100 gaia_source.solution_id, gaia_source.designation, gaia_source.source_id, gaia_source.ra, gaia_source.dec, gaia_source.parallax, (1000 / gaia_source.parallax) * TAN(DISTANCE(POINT(gaia_source.ra, gaia_source.dec), POINT(289.217, 47.8841)) ) AS distance_in_parsecs FROM gaiadr3.gaia_source WHERE CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', 0, 0, 0.01)) = 1 AND gaia_source.parallax IS NOT NULL ORDER BY distance_in_parsecs ASC"
-	})
+	#"QUERY": "SELECT * FROM gaiadr3.gaia_source WHERE ra BETWEEN 286.12 AND 286.14 AND dec BETWEEN -63.88 AND -63.86"
+    #"QUERY":   "SELECT TOP 100 * FROM gaiadr3.gaia_source WHERE gaiadr3_source_id = 0, CONTAINS(POINT('ICRS_GEOCENTER', gaiadr3.gaia_source.ra, gaiadr3.gaia_source.dec), CIRCLE('ICRS', 289.217, 47.8841, 0.001)) = 1"
+	#"QUERY":   "SELECT TOP 100 gaia_source.solution_id, gaia_source.designation, gaia_source.source_id, gaia_source.ra, gaia_source.dec, gaia_source.parallax, (1000 / gaia_source.parallax) * TAN(DISTANCE(POINT(gaia_source.ra, gaia_source.dec), POINT(289.217, 47.8841)) ) AS distance_in_parsecs FROM gaiadr3.gaia_source WHERE CONTAINS(POINT('ICRS', ra, dec), CIRCLE('ICRS', 289.217, 47.8841, 0.01)) = 1 AND gaia_source.parallax IS NOT NULL ORDER BY distance_in_parsecs ASC"
+	"QUERY": "SELECT TOP 2000 gaia_source.solution_id, gaia_source.designation, gaia_source.source_id, gaia_source.ra, gaia_source.dec, gaia_source.parallax, (1000 / gaia_source.parallax) * TAN(DISTANCE(POINT(gaia_source.ra, gaia_source.dec), POINT(0, 0)) * PI() / 180) AS distance_in_parsecs FROM gaiadr3.gaia_source WHERE CONTAINS(POINT('ICRS',gaiadr3.gaia_source.ra,gaiadr3.gaia_source.dec),CIRCLE('ICRS',COORD1(EPOCH_PROP_POS(101.287155333,-16.716115861,379.2100,-546.0100,-1223.0700,-5.5000,2000,2016.0)),COORD2(EPOCH_PROP_POS(101.287155333,-16.716115861,379.2100,-546.0100,-1223.0700,-5.5000,2000,2016.0)),0.002777777777777778))=1"
+    })
 
 headers = {\
 	"Content-type": "application/x-www-form-urlencoded", \
