@@ -9,6 +9,50 @@ host = "gea.esac.esa.int"
 port = 443
 pathinfo = "/tap-server/tap/async"
 
+# Get the data of a planet by name
+name = "Kepler-22 b"
+raQuery = 0.0
+decQuery = 0.0
+xQuery = 0.0
+yQuery = 0.0
+zQuery = 0.0
+with open("converted_coordinates.csv", "r") as csvfile:
+    reader = csv.reader(csvfile)
+    # Get the header (first row)
+    header = next(reader)
+    pl_name_index = header.index("pl_name")
+    # Find the indexes of columns
+    ra_index = header.index("ra")
+    dec_index = header.index("dec")
+    x_index = header.index("X")
+    y_index = header.index("Y")
+    z_index = header.index("Z")
+
+    for row in reader:          
+        pl_name_value = str(row[pl_name_index])
+        if pl_name_value == name:  
+            raQuery = float(row[ra_index])
+            decQuery = float(row[dec_index])
+            xQuery = float(row[x_index])
+            yQuery = float(row[y_index])  
+            zQuery = float(row[z_index])  
+
+          
+# Construct query          
+query = f"""
+SELECT gaia_source.solution_id,
+       gaia_source.ra,
+       gaia_source.dec,
+       gaia_source.parallax,
+       gaia_source.phot_g_mean_mag,
+       gaia_source.teff_gspphot
+FROM gaiadr3.gaia_source
+WHERE CONTAINS(POINT('ICRS', gaia_source.ra, gaia_source.dec),
+               CIRCLE('ICRS', {raQuery}, {decQuery}, 0.1)) = 1
+      AND gaia_source.parallax IS NOT NULL
+      AND gaia_source.parallax > 0
+      AND gaia_source.teff_gspphot IS NOT NULL
+"""
 # Create job (this part remains unchanged)
 params = urllib.urlencode({
     "REQUEST": "doQuery",
@@ -17,7 +61,7 @@ params = urllib.urlencode({
     "PHASE": "RUN",
     "JOBNAME": "Any name (optional)",
     "JOBDESCRIPTION": "Any description (optional)",
-    "QUERY": "SELECT gaia_source.solution_id, gaia_source.ra, gaia_source.dec, gaia_source.parallax, gaia_source.phot_g_mean_mag, gaia_source.teff_gspphot FROM gaiadr3.gaia_source WHERE CONTAINS(POINT('ICRS', gaia_source.ra, gaia_source.dec), CIRCLE('ICRS', 289.217, 47.8841, 0.2)) = 1 AND gaia_source.parallax IS NOT NULL AND gaia_source.parallax > 0 AND gaia_source.teff_gspphot IS NOT NULL"
+    "QUERY": query
 })
 
 headers = {
@@ -81,12 +125,10 @@ with open(output_file_name, "w", newline='') as csvfile:
 print("Data saved in: " + output_file_name)
 
 #Operate over values
-
-
 # Planet data
-x_planet = 36.448
-y_planet = -124.136
-z_planet = 144.54
+x_planet = xQuery
+y_planet = yQuery
+z_planet = zQuery
 
 # Variables to store luminosity and radius values for normalization
 luminosity_relative_values = []
@@ -171,10 +213,24 @@ if radius_relative_values:
     # Multiply values by 10 if they are smaller than 0.1
     normalized_radius = [value * 10 if value < 0.1 else value for value in normalized_radius]
 
-# Print the results in an organized table format
-print(f"{'X Star Relative':<20} {'Y Star Relative':<20} {'Z Star Relative':<20} {'Normalized Luminosity':<25} {'Normalized Radius':<20}")
-print("=" * 110)
+# Save into csv
+output_file = "stars.csv"
 
-# Combine results and normalized values for final output
-for i, result in enumerate(results):
-    print(f"{result[0]:<20.5f} {result[1]:<20.5f} {result[2]:<20.5f} {normalized_luminosity[i]:<25.5f} {normalized_radius[i]:<20.5f}")
+# Open the CSV file for writing
+with open(output_file, mode='w', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    
+    # Write the header (optional)
+    writer.writerow(['X', 'Y', 'Z', 'Normalized Luminosity', 'Normalized Radius'])
+    
+    # Write the data
+    for i, result in enumerate(results):
+        writer.writerow([
+            f"{result[0]:.5f}",
+            f"{result[1]:.5f}",
+            f"{result[2]:.5f}",
+            f"{normalized_luminosity[i]:.5f}",
+            f"{normalized_radius[i]:.5f}"
+        ])
+
+print(f"Data written to {output_file}")
