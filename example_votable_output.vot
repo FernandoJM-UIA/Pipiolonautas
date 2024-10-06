@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<VOTABLE version="1.4" xmlns="http://www.ivoa.net/xml/VOTable/v1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.3 http://www.ivoa.net/xml/VOTable/votable-1.4.xsd">
+<RESOURCE type="results">
+<INFO name="QUERY_STATUS" value="OK"/>
+
+<INFO name="QUERY" value="SELECT TOP 10 gaia_source.solution_id, gaia_source.ra, gaia_source.dec, gaia_source.parallax FROM gaiadr3.gaia_source WHERE CONTAINS(POINT('ICRS', gaia_source.ra, gaia_source.dec), CIRCLE('ICRS', 289.217, 47.8841, 0.1)) = 1 AND gaia_source.parallax IS NOT NULL AND gaia_source.parallax &gt; 0"><![CDATA[SELECT TOP 10 gaia_source.solution_id, gaia_source.ra, gaia_source.dec, gaia_source.parallax FROM gaiadr3.gaia_source WHERE CONTAINS(POINT('ICRS', gaia_source.ra, gaia_source.dec), CIRCLE('ICRS', 289.217, 47.8841, 0.1)) = 1 AND gaia_source.parallax IS NOT NULL AND gaia_source.parallax > 0]]></INFO>
+<INFO name="CAPTION" value=""/>
+<INFO name="CITATION" value="" ucd="meta.bib"/>
+<INFO name="PAGE" value=""/>
+<INFO name="PAGE_SIZE" value=""/>
+<INFO name="JOBID" value="1728209515420O"><![CDATA[1728209515420O]]></INFO>
+<INFO name="JOBNAME" value="Any name (optional)"><![CDATA[Any name (optional)]]></INFO>
+
+<PARAM name="RELEASE" ID="GaiaRelease" datatype="char" arraysize="*" value="Gaia DR3"/>
+
+<COOSYS ID="GAIADR3" epoch="J2016.0" system="ICRS"/>
+
+<RESOURCE>
+  <COOSYS ID="t6279303-coosys-1" epoch="J2016.0" system="ICRS"/>
+</RESOURCE>
+<TABLE>
+<FIELD datatype="long" name="solution_id" ucd="meta.version">
+<DESCRIPTION>Solution Identifier</DESCRIPTION>
+</FIELD>
+<FIELD datatype="double" name="ra" ref="t6279303-coosys-1" ucd="pos.eq.ra;meta.main" unit="deg" utype="stc:AstroCoords.Position3D.Value3.C1">
+<DESCRIPTION>Right ascension</DESCRIPTION>
+</FIELD>
+<FIELD datatype="double" name="dec" ref="t6279303-coosys-1" ucd="pos.eq.dec;meta.main" unit="deg" utype="stc:AstroCoords.Position3D.Value3.C2">
+<DESCRIPTION>Declination</DESCRIPTION>
+</FIELD>
+<FIELD datatype="double" name="parallax" ucd="pos.parallax.trig" unit="mas">
+<DESCRIPTION>Parallax</DESCRIPTION>
+</FIELD>
+<DATA>
+<TABLEDATA>
+<TR><TD>1636148068921376768</TD><TD>289.12953207977375</TD><TD>47.81006394239205</TD><TD>1.717500293508742</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.1262569425362</TD><TD>47.81177658671815</TD><TD>0.12983118836214438</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.14078843121933</TD><TD>47.81114837719484</TD><TD>0.10187400223765511</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.135317878432</TD><TD>47.81640207049164</TD><TD>0.5950589169975942</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.1255699004995</TD><TD>47.82537714286972</TD><TD>0.42405807206328694</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.1270303855327</TD><TD>47.832213382087225</TD><TD>0.19058223709739652</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.1103443181687</TD><TD>47.8302206596764</TD><TD>0.8532951123917877</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.113377087918</TD><TD>47.8429850102754</TD><TD>0.7864947678931611</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.12918563261184</TD><TD>47.83466038021267</TD><TD>0.8073766527958385</TD></TR>
+<TR><TD>1636148068921376768</TD><TD>289.1374270156954</TD><TD>47.834606590549384</TD><TD>0.1881038899451396</TD></TR>
+</TABLEDATA>
+</DATA>
+
+</TABLE>
+</RESOURCE>
+</VOTABLE>
