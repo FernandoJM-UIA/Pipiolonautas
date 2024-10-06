@@ -14,11 +14,13 @@ canvas{
 }
 
 .background {
-  filter: blur(8px);
+  filter: blur(10px);
   pointer-events: none; 
   display: none; 
   height: 100vh;
   width: 100vw;
+  background-color: #045bb10e;
+  z-index: 99;
 }
 
 .active{

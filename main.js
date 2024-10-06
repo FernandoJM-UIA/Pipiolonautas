@@ -120,6 +120,7 @@ checkbox.addEventListener('change', function() {
     hideSaveForm();
     deleteDrawnLineTotal();
     desactiveButton();
+    disableBackground();
   }
 });
 
@@ -305,7 +306,7 @@ function saveCanvasImage(){
     const link = document.createElement('a');
     
     // Set the download attribute with a file name
-    link.download = 'page-screenshot.png'; // You can set any name for the saved file
+    link.download = 'Constellation.png'; // You can set any name for the saved file
     
     // Set the href attribute to the canvas data URL
     link.href = dataURL;
@@ -501,6 +502,15 @@ function activeButton(){
 }
 
 function enableBackground(){
-  const background = document.getElementById('saveCons');
-  deleteOne.classList.add('unableButton');
+  const background = document.getElementById('backgroundBlur');
+  const header = document.getElementById('header');
+  header.style.zIndex = 98;
+  background.classList.add('active');
+}
+
+function disableBackground(){
+  const background = document.getElementById('backgroundBlur');
+  if(background.classList.contains('active')){
+    background.classList.remove('active'); 
+  }
 }
