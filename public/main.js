@@ -261,7 +261,7 @@ function deleteDrawnLineTotal() {
   }
 }
 
-document.getElementById('deleteDrawn').addEventListener('click', deleteDrawnLine);
+document.getElementById('deleteOne').addEventListener('click', deleteDrawnLine);
 document.getElementById('delete').addEventListener('click', deleteDrawnLineTotal);
 
 // Function to undo the last point
@@ -302,7 +302,8 @@ function createNewConstellation(){
 
 document.getElementById('newCons').addEventListener('click', function() {
   showSaveForm();
-  createNewConstellation(); // Create a new constellation
+  if(preSave === "complete")
+    createNewConstellation();
 });
 
 function saveCanvasImage(){
@@ -354,6 +355,7 @@ function preSave(event){
   constSaved.push({name, description});
   cancelSave(); 
   console.log(constSaved);
+  return "complete";
 }
 document.getElementById('saveForm').addEventListener('submit', preSave);
 

@@ -44,96 +44,10 @@ canvas{
   display: flex;
   flex-direction: row;
   position: absolute;
-  top: 10px;
+  top: 24px;
   left: 18px;
   justify-content: flex-start;
   align-items: center;
-}
-#pencil-icon {
-  /* position: absolute;
-  top: 10px;
-  left: 10px; */
-  cursor: pointer;
-  margin-right: 5px;
-}
-.Btn#pencil-icon{
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100px;
-  height: 40px;
-  border: none;
-  padding: 0px 20px;
-  background-color: black;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  border-radius: 10px;
-  box-shadow: 5px 5px 0px black;
-  transition-duration: 0.3s;
-}
-
-#pencil-icon .svg {
-  width: 13px;
-  position: absolute;
-  right: 0;
-  margin-right: 20px;
-  fill: white;
-  transition-duration: 0.3s;
-}
-
-.Btn#pencil-icon:hover {
-  color: transparent;
-}
-
-.Btn#pencil-icon:hover svg {
-  right: 43%;
-  margin: 0;
-  padding: 0;
-  border: none;
-  transition-duration: 0.3s;
-}
-
-.Btn#pencil-icon:active {
-  transform: translate(3px, 3px);
-  transition-duration: 0.3s;
-  box-shadow: 2px 2px 0px white;
-}
-
-.bin-button#deleteDrawn{
-  /* position: absolute;
-  top: 17px;
-  left: 10%; */
-  margin: 0px 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 35px;
-  height: 35px;
-  border-radius: 7%;
-  background-color: rgb(255, 95, 95);
-  cursor: pointer;
-  border: 1px solid rgb(255, 201, 201);
-  transition-duration: 0.3s;
-}
-.bin-bottom#deleteDrawn {
-  width: 150px;
-}
-#deleteDrawn .bin-top {
-  width: 9px;
-  transform-origin: right;
-  transition-duration: 0.3s;
-}
-.bin-button#deleteDrawn:hover .bin-top {
-  transform: rotate(45deg);
-}
-.bin-button#deleteDrawn:hover {
-  background-color: rgb(255, 0, 0);
-}
-.bin-button#deleteDrawn:active {
-  transform: scale(0.9);
 }
 
 .button#undoBtn {
@@ -416,14 +330,14 @@ button#saveCons:active {
   border-color: #fff;
 }
 
-.paste-button#delete {
+.paste-button {
   position: relative;
-  margin: 0 10px;
+  margin: 0 5px;
   display: block;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#delete .button{
+.buttonGeneral{
   background-color: #272927;
   color: #d4cfcf;
   padding: 10px 15px;
@@ -434,61 +348,16 @@ button#saveCons:active {
   cursor: pointer;
 }
 
-#delete .dropdown-content {
-  display: none;
-  font-size: 13px;
-  position: absolute;
-  z-index: 1;
-  min-width: 150px;
-  background-color: #d3d3d3;
-  border: 2px solid #232423;
-  border-radius: 0px 15px 15px 15px;
-  box-shadow: 0px 8px 16px 0px rgba(44, 43, 43, 0.2);
-}
 
-#delete .dropdown-content a {
-  color: #282928;
-  padding: 8px 10px;
-  text-decoration: none;
-  display: block;
-  transition: 0.1s;
-}
-
-#delete .dropdown-content a:hover {
-  background-color: #474646;
-  color: #ccc2c2;
-}
-
-#delete .dropdown-content a:focus {
-  background-color: #d6d0d0;
-  color: #3a3f3a;
-}
-
-#delete .dropdown-content #top:hover {
-  border-radius: 0px 13px 0px 0px;
-}
-
-#delete .dropdown-content #bottom:hover {
-  border-radius: 0px 0px 13px 13px;
-}
-
-.paste-button#delete:hover button {
-  border-radius: 15px 15px 0px 0px;
-}
-
-/* .paste-button#delete:active .dropdown-content {
-  display: block;
-} */
 
 .form-container#uploadContainer {
   transition: ease 0.3s;
-  position: absolute;
+  /* position: absolute;
   top: 50%;
-  left: 50%;
+  left: 50%; */
   transform: translate(-50%, -50%);
   width: 400px;
-  background: linear-gradient(#212121, #212121) padding-box,
-              linear-gradient(145deg, transparent 35%,#e81cff, #40c9ff) border-box;
+  background: #272927;
   border: 2px solid transparent;
   padding: 32px 24px;
   font-size: 14px;
@@ -499,6 +368,7 @@ button#saveCons:active {
   gap: 20px;
   box-sizing: border-box;
   border-radius: 16px;
+  margin: 0 5px;
 }
 .custum-file-upload {
   height: 200px;
@@ -511,7 +381,7 @@ button#saveCons:active {
   align-items: center;
   justify-content: center;
   border: 2px dashed #e8e8e8;
-  background-color: #212121;
+  background-color: #272927;
   padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0px 48px 35px -48px #e8e8e8;
@@ -601,4 +471,204 @@ button#saveCons:active {
 .button#uploadButton svg {
   width: 1.5em;
   margin-top: 3px;
+}
+
+/* Pencil Object */
+.toggle-cont#pencil-icon {
+  --primary: #54a8fc;
+  --light: #d9d9d9;
+  --dark: #272927;
+  --gray: #414344;
+
+  /* position: relative; */
+  z-index: 10;
+
+  width: fit-content;
+  margin: 0 5px;
+  /* height: 28px; */
+
+  border-radius: 9999px;
+}
+
+.toggle-cont#pencil-icon .toggle-input {
+  display: none;
+}
+
+.toggle-cont#pencil-icon .toggle-label {
+  --gap: 5px;
+  --width: 28px;
+
+  cursor: pointer;
+
+  position: relative;
+  display: inline-block;
+
+  padding: 0.5rem;
+  width: calc((var(--width) + var(--gap)) * 2);
+  height: 100%;
+  background-color: var(--dark);
+
+  border: 1px solid #777777;
+  border-bottom: 0;
+
+  border-radius: 9999px;
+  box-sizing: content-box;
+  transition: all 0.3s ease-in-out;
+}
+#pencil-icon.toggle-label::before {
+  content: "";
+
+  position: absolute;
+  z-index: -10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: calc(100% + 1.5rem);
+  height: calc(100% + 1.5rem);
+  background-color: var(--gray);
+
+  border: 1px solid #777777;
+  border-bottom: 0;
+  border-radius: 9999px;
+
+  transition: all 0.3s ease-in-out;
+}
+#pencil-icon.toggle-label::after {
+  content: "";
+
+  position: absolute;
+  z-index: -10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    circle at 50% -100%,
+    rgb(58, 155, 252) 0%,
+    rgba(12, 12, 12, 1) 80%
+  );
+
+  border-radius: 9999px;
+}
+
+.toggle-cont#pencil-icon .toggle-label .cont-icon {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  width: var(--width);
+  height: 28px;
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    #666666 0%,
+    var(--gray) 100%
+  );
+
+  border: 1px solid #aaaaaa;
+  border-bottom: 0;
+  border-radius: 9999px;
+  box-shadow: inset 0 -0.15rem 0.15rem var(--primary),
+    inset 0 0 0.5rem 0.75rem var(--second);
+
+  transition: transform 0.3s ease-in-out;
+}
+
+#pencil-icon .cont-icon {
+  overflow: clip;
+  position: relative;
+}
+
+#pencil-icon .cont-icon .sparkle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  display: block;
+
+  width: calc(var(--width) * 1px);
+  aspect-ratio: 1;
+  background-color: var(--light);
+
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  rotate: calc(1deg * var(--deg));
+  transform: translate(-50%, -50%);
+  animation: sparkle calc(100s / var(--duration)) linear
+    calc(0s / var(--duration)) infinite;
+}
+
+@keyframes sparkle {
+  to {
+    width: calc(var(--width) * 0.5px);
+    transform: translate(2000%, -50%);
+  }
+}
+
+#pencil-icon .cont-icon .icon {
+  width: 1rem;
+  fill: var(--light);
+}
+
+#pencil-icon svg{
+  width: 70%;
+  fill: white;
+}
+
+.toggle-cont#pencil-icon:has(.toggle-input:checked) {
+  --checked: true;
+}
+
+@container style(--checked: true) {
+  .toggle-cont#pencil-icon .toggle-label {
+    background-color: #000f11;
+
+    border: 1px solid #3d6970;
+    border-bottom: 0;
+  }
+
+  .toggle-cont#pencil-icon .toggle-label::before {
+    box-shadow: 0 1rem 2.5rem -2rem #171818;
+  }
+
+  .toggle-cont#pencil-icon .toggle-label .cont-icon {
+    overflow: visible;
+
+    background-image: radial-gradient(
+      circle at 50% 0%,
+      #045ab1 0%,
+      var(--primary) 100%
+    );
+
+    border: 1px solid var(--primary);
+    border-bottom: 0;
+
+    transform: translateX(calc((var(--gap) * 2) + 100%)) rotate(-225deg);
+  }
+
+  .toggle-cont#pencil-icon .toggle-label .cont-icon .sparkle {
+    z-index: -10;
+
+    width: calc(var(--width) * 1.5px);
+    background-color: #acacac;
+
+    animation: sparkle calc(100s / var(--duration)) linear
+      calc(10s / var(--duration)) infinite;
+  }
+
+  @keyframes sparkle {
+    to {
+      width: calc(var(--width) * 1px);
+      transform: translate(5000%, -50%);
+    }
+  }
+}
+
+#uploadButton{
+  align-self: flex-end;
 }
