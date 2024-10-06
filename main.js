@@ -2,6 +2,7 @@ import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import earthTexture from './src/img/earth.jpg';
+import { System } from 'three/examples/jsm/libs/ecsy.module.js';
 
 // Scene == container
 const scene = new THREE.Scene();
@@ -22,9 +23,9 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-// Load the background of the space
-const spaceTexture = new THREE.TextureLoader().load('./images/black.png');
-scene.background = spaceTexture;
+// Load black background
+const bg = new THREE.TextureLoader().load('./images/black.png');
+scene.background =  bg;
 
 
 // Setting up orbit control
@@ -33,22 +34,30 @@ const cameraDefaultPos = new THREE.Vector3(0, 0, 20);
 
 orbit.minDistance = 20;
 orbit.maxDistance = 40;
-orbit.enablePan = false;     // Disable panning
+orbit.enablePan = false; // Disable panning
 camera.position.copy(cameraDefaultPos);
-
 
 orbit.update();
 
-// Loading planets
 const textureload = new THREE.TextureLoader();
 
-// Loading other planets
-function createPlanet(size, texture, position, name, ring){
+
+function createPlanet(size, texture, ring){
+    let texturePlanet 
+    // List of textures available
+    const list = ['earth', 'venus', 'mars'];
+
+    if (list.includes(texture)) {
+        texturePlanet = textureload.load('./src/img/'+texture+'.jpg');
+    } else {
+        texturePlanet = textureload.load('./src/img/default.jpg');
+    }
+
   const geometry = new THREE.SphereGeometry(size, 50, 50);
   const material = new THREE.MeshStandardMaterial({
-    map : textureload.load(texture) ,
+    map : texturePlanet,
     emissive: new THREE.Color(0xffffff),
-    emissiveMap : textureload.load(texture), 
+    emissiveMap : texturePlanet,
     emissiveIntensity : 1,
     transparent: true, 
     opacity: 1 
@@ -59,47 +68,14 @@ function createPlanet(size, texture, position, name, ring){
   planetObj.add(planet);
   planet.name = "Planet";
   scene.add(planetObj);
-  planet.position.x = position;
-  planet.position.y = position;
+  planet.position.x = 0;
+  planet.position.y = 0;
+  planet.position.z = 0;
 
-  if(ring){
-    const ringGeo = new THREE.RingGeometry(
-      ring.innerRadius, 
-      ring.outerRadius, 30
-    );
-    const ringMat = new THREE.MeshStandardMaterial({
-      map:textureload.load(ring.texture),
-      side: THREE.DoubleSide
-    });
-    const Ring = new THREE.Mesh(ringGeo, ringMat);
-    planetObj.add(Ring);
-
-    Ring.position.x = position;
-    Ring.rotation.x = -0.5 * Math.PI;
-  }
   return {planet, planetObj};
 }
 
-const earth = new createPlanet(5.56,earthTexture,0, "Planet");
-const sphereGeometry = new THREE.SphereGeometry(1, 32, 32); // radius, width segments, height segments
-const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfff, emissive: new THREE.Color(0xffffff)}); 
-const sphereMaterial1 = new THREE.MeshStandardMaterial({ color: 0x0ff, emissive: new THREE.Color(0x00ffff)});
-const sphereMaterial2 = new THREE.MeshStandardMaterial({ color: 0xf0f, emissive: new THREE.Color(0xff00ff)});
-const sphereMaterial3 = new THREE.MeshStandardMaterial({ color: 0xff0, emissive: new THREE.Color(0xffff00)});
-const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-const sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial1);
-const sphere2 = new THREE.Mesh(sphereGeometry, sphereMaterial2);
-const sphere3 = new THREE.Mesh(sphereGeometry, sphereMaterial3);
-
-sphere.position.set(0, 30, 0);
-sphere1.position.set(-30, 0, 0);
-sphere2.position.set(30, 0, 0);
-sphere3.position.set(0, -30, 0);
-
-scene.add(sphere);
-scene.add(sphere1);
-scene.add(sphere2);
-scene.add(sphere3);
+const earth = new createPlanet(5.56, "earth", true);
 
 // Control the objects position
 function moveCamera() {
@@ -111,7 +87,7 @@ function moveCamera() {
 }
 document.body.onscroll = moveCamera;
 
-// // Animation loop
+// Animation loop
 function animate() {
     earth.planet.rotateY(0.001);
     earth.planetObj.rotateY(0.001);
@@ -149,7 +125,7 @@ function moveCameraSmooth(targetPosition, planet) {
         planet.material.opacity = 1-t;
         orbit.maxDistance = 40 - 10 * t;
         orbit.minDistance = 20 - 20 * t;
-        // Interpolate camera rotation using quaternion slerp (smooth rotation)
+        
         camera.quaternion.slerpQuaternions(initialQuaternion, targetQuaternion, t);
 
         // Update camera position using linear interpolation
