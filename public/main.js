@@ -127,6 +127,7 @@ function toggleCameraControl() {
   }
 }
 
+// Function that allo the mouse interaction with the user
 function onMouseDown(event) {
   // Only allow object selection if camera controls are disabled
   if (!cameraControlsActive) {
@@ -155,8 +156,8 @@ function onMouseDown(event) {
           const point = intersections[0].point; // Get clicked point
           console.log(`Clicked point coordinates: x=${point.x}, y=${point.y}, z=${point.z}`);
           linePoints.push(point);
-          // drawLine(0xcdf0f1, 5);
-          drawLineSegments(0xcdf0f1, 5);
+          drawLine(true, 0xcdf0f1, 5);
+          //drawLineSegments(0xcdf0f1, 5);
           printSelectedObjects();
           console.log("Points" + linePoints);
       }
@@ -167,23 +168,20 @@ function onMouseDown(event) {
 
 function drawLine(removePrevious = true, lineColor = 0xcdf0f1, lineThickness = 5) {
   const geometry = new THREE.BufferGeometry().setFromPoints(linePoints);
-  
-  // Create material with variable color and thickness
   const material = new THREE.LineBasicMaterial({ 
       color: lineColor, 
       linewidth: lineThickness 
   });
 
   const line = new THREE.Line(geometry, material);
+  line.name = 'constellationLine';
   // Set raycast to null so the line itself cannot be selected
   line.raycast = () => {};
 
-  // Remove the previous line if it exists
-  if (scene.getObjectByName('drawingLine')) {
-      scene.remove(scene.getObjectByName('drawingLine'));
+  // If removePrevious is true, remove the previous drawn line (if any)
+  if (removePrevious && scene.getObjectByName(line.name)) {
+    scene.remove(scene.getObjectByName(line.name));
   }
-
-  line.name = 'drawingLine'; // Set a name for easy identification and removal later
   scene.add(line); // Add the line to the scene
 }
 
@@ -228,7 +226,8 @@ function printSelectedObjects(){
 }
 
 function deleteDrawnLine() {
-  const drawnLine = scene.getObjectByName('drawingLine'); // Find the line by name
+  // Use the correct name pattern for the last drawn constellation line
+  const drawnLine = scene.getObjectByName('constellationLine');
   if (drawnLine) {
       scene.remove(drawnLine); // Remove the line from the scene
       console.log('Drawn line was deleted!');
@@ -237,6 +236,7 @@ function deleteDrawnLine() {
       console.log('No line to delete.');
   }
 }
+
 document.getElementById('deleteDrawn').addEventListener('click', deleteDrawnLine);
 
 // Function to undo the last point
@@ -244,11 +244,18 @@ function undoLastPoint() {
   if (linePoints.length > 0) {
       linePoints.pop(); // Remove the last point from the array
       console.log('Last point undone.');
-      drawLine(); // Redraw the line with the updated points
+      console.log(linePoints);
+      // Remove the current line before redrawing it with updated points
+      const currentLine = scene.getObjectByName('constellationLine');
+      if (currentLine) {
+          scene.remove(currentLine); // Remove the previous line
+      }
+      drawLine(); // Redraw the line with the updated points, without removing previous lines
   } else {
       console.log('No points to undo.');
   }
 }
+
 // Add an event listener to the Undo button
 document.getElementById('undoBtn').addEventListener('click', undoLastPoint);
 
@@ -259,14 +266,14 @@ function createNewConstellation(){
   if(linePoints.length > 0){
     constellations.push([...linePoints]); // Copy the current line points
     console.log('New Constellation created with point', linePoints);
-    linePoints.length = 0;
-    drawLine();
+    drawLine(false);
     // Clear the points for the next line
     linePoints.length = 0;
   }else{
     console.log('No points to create a constellation.');
   }
 }
+
 document.getElementById('newCons').addEventListener('click', function() {
   createNewConstellation(); // Create a new constellation
 });
