@@ -97,6 +97,7 @@ const linePoints = [];
 // Create new constelation
 const constellations = [];
 let line;
+let iCons = 1;
 
 document.addEventListener('mousedown', onMouseDown);
 pencilIcon.addEventListener('click', toggleCameraControl);
@@ -174,7 +175,7 @@ function drawLine(removePrevious = true, lineColor = 0xcdf0f1, lineThickness = 5
   });
 
   const line = new THREE.Line(geometry, material);
-  line.name = 'constellationLine';
+  line.name = 'constellationLine'+iCons;
   // Set raycast to null so the line itself cannot be selected
   line.raycast = () => {};
 
@@ -227,17 +228,31 @@ function printSelectedObjects(){
 
 function deleteDrawnLine() {
   // Use the correct name pattern for the last drawn constellation line
-  const drawnLine = scene.getObjectByName('constellationLine');
+  const drawnLine = scene.getObjectByName('constellationLine'+iCons);
   if (drawnLine) {
       scene.remove(drawnLine); // Remove the line from the scene
       console.log('Drawn line was deleted!');
       linePoints.length = 0; // Clear the linePoints array
+      iCons--;
+      console.log("iCons" +iCons);
   } else {
       console.log('No line to delete.');
   }
+  
 }
 
-document.getElementById('deleteDrawn').addEventListener('click', deleteDrawnLine);
+function deleteDrawnLineTotal() {
+  console.log(iCons);
+  let j;
+  if (iCons >= 1) {
+      for (j = iCons; j >= 0; j--) { // Changed j == 0 to j >= 0
+          deleteDrawnLine();
+      }
+  } else {
+      console.log('No lines to delete.');
+  }
+}
+document.getElementById('deleteDrawn').addEventListener('click', deleteDrawnLineTotal);
 
 // Function to undo the last point
 function undoLastPoint() {
@@ -246,7 +261,7 @@ function undoLastPoint() {
       console.log('Last point undone.');
       console.log(linePoints);
       // Remove the current line before redrawing it with updated points
-      const currentLine = scene.getObjectByName('constellationLine');
+      const currentLine = scene.getObjectByName('constellationLine'+iCons);
       if (currentLine) {
           scene.remove(currentLine); // Remove the previous line
       }
@@ -266,9 +281,10 @@ function createNewConstellation(){
   if(linePoints.length > 0){
     constellations.push([...linePoints]); // Copy the current line points
     console.log('New Constellation created with point', linePoints);
-    drawLine(false);
+    drawLine(true);
     // Clear the points for the next line
     linePoints.length = 0;
+    iCons++;
   }else{
     console.log('No points to create a constellation.');
   }
