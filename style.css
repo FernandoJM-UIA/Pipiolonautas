@@ -99,3 +99,18 @@ footer {
   color: #fff;
   /* border-top: 3px solid #004e92; */
 }
+
+.tooltip {
+    position: absolute; /* Ensure the tooltip is positioned relative to its parent */
+    width: 200px; /* Set a fixed width */
+    height: auto; /* You can set a fixed height if needed */
+    padding: 10px; /* Add some padding for better spacing */
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+    color: white; /* Text color */
+    border-radius: 5px; /* Rounded corners */
+    pointer-events: none; /* Prevent mouse events from interfering */
+    white-space: normal; /* Allow line breaks */
+    overflow: hidden; /* Hide any overflowing content */
+    z-index: 10; /* Ensure tooltip is on top */
+    display: none; /* Initially hidden */
+}

@@ -1,20 +1,7 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { createMoon, updateMoon } from './moon.js';
-
-import sunTexture from './src/img/sun.jpg';
-import mercuryTexture from './src/img/mercury.jpg';
-import venusTexture from './src/img/venus.jpg';
 import earthTexture from './src/img/earth.jpg';
-import marsTexture from './src/img/mars.jpg';
-import jupiterTexture from './src/img/jupiter.jpg';
-import saturnTexture from './src/img/saturn.jpg';
-import saturnRingTexture from './src/img/saturn ring.png';
-import uranusTexture from './src/img/uranus.jpg';
-import uranusRingTexture from './src/img/uranus ring.png';
-import neptuneTexture from './src/img/neptune.jpg';
-import plutoTexture from './src/img/pluto.jpg';
 
 // Scene == container
 const scene = new THREE.Scene();
@@ -23,9 +10,10 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
-  0.1,
+  0.01,
   1000
 );
+
 const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
@@ -35,45 +23,44 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 // Load the background of the space
-const spaceTexture = new THREE.TextureLoader().load('./images/blackbg.avif');
+const spaceTexture = new THREE.TextureLoader().load('./images/black.png');
 scene.background = spaceTexture;
+
 
 // Setting up orbit control
 const orbit = new OrbitControls(camera, renderer.domElement);
-camera.position.set(-90, 140, 140);
+const cameraDefaultPos = new THREE.Vector3(0, 0, 20);
+
+orbit.minDistance = 20;
+orbit.maxDistance = 40;
+orbit.enablePan = false;     // Disable panning
+camera.position.copy(cameraDefaultPos);
+
+
 orbit.update();
-
-// Setting up lights
-const pointLight = new THREE.PointLight(0xffffff, 3, 300);
-pointLight.position.set(20, 20, 20);
-const ambientLight = new THREE.AmbientLight(0x333333);
-scene.add(pointLight, ambientLight);
-
-// Lights Helpers
-const lightHelper = new THREE.PointLightHelper(pointLight);
-const gridHelper = new THREE.GridHelper(200, 50);
-scene.add(lightHelper, gridHelper);
 
 // Loading planets
 const textureload = new THREE.TextureLoader();
-// Sun
-const sunGeo = new THREE.SphereGeometry(12, 25, 20);
-const sunMat = new THREE.MeshBasicMaterial({
-  map:textureload.load(sunTexture)
-});
-const sun = new THREE.Mesh(sunGeo, sunMat);
-scene.add(sun);
+
 // Loading other planets
-function createPlanet(size, texture, position, ring){
-  const geometry = new THREE.SphereGeometry(size, 25, 20);
+function createPlanet(size, texture, position, name, ring){
+  const geometry = new THREE.SphereGeometry(size, 50, 50);
   const material = new THREE.MeshStandardMaterial({
-    map:textureload.load(texture) ,
+    map : textureload.load(texture) ,
+    emissive: new THREE.Color(0xffffff),
+    emissiveMap : textureload.load(texture), 
+    emissiveIntensity : 1,
+    transparent: true, 
+    opacity: 1 
   });
   const planet = new THREE.Mesh(geometry, material);
   const planetObj = new THREE.Object3D;
+  
   planetObj.add(planet);
+  planet.name = "Planet";
   scene.add(planetObj);
   planet.position.x = position;
+  planet.position.y = position;
 
   if(ring){
     const ringGeo = new THREE.RingGeometry(
@@ -93,57 +80,30 @@ function createPlanet(size, texture, position, ring){
   return {planet, planetObj};
 }
 
-const mercury = new createPlanet(4,mercuryTexture,20);
-const venus = new createPlanet(5,venusTexture,40);
-const earth = new createPlanet(5.56,earthTexture,60);
-const mars = new createPlanet(5,marsTexture,80);
-const jupiter = new createPlanet(6,jupiterTexture,100);
-const saturn = new createPlanet(8,saturnTexture,150,{
-  innerRadius: 10,
-  outerRadius: 20,
-  texture: saturnRingTexture
-});
-const uranus = new createPlanet(8.2,uranusTexture,200,{
-  innerRadius: 10,
-  outerRadius: 20,
-  texture: uranusRingTexture
-});
-const neptune = new createPlanet(5,neptuneTexture,240);
+const earth = new createPlanet(5.56,earthTexture,0, "Planet");
+const sphereGeometry = new THREE.SphereGeometry(1, 32, 32); // radius, width segments, height segments
+const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfff, emissive: new THREE.Color(0xffffff)}); 
+const sphereMaterial1 = new THREE.MeshStandardMaterial({ color: 0x0ff, emissive: new THREE.Color(0x00ffff)});
+const sphereMaterial2 = new THREE.MeshStandardMaterial({ color: 0xf0f, emissive: new THREE.Color(0xff00ff)});
+const sphereMaterial3 = new THREE.MeshStandardMaterial({ color: 0xff0, emissive: new THREE.Color(0xffff00)});
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+const sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial1);
+const sphere2 = new THREE.Mesh(sphereGeometry, sphereMaterial2);
+const sphere3 = new THREE.Mesh(sphereGeometry, sphereMaterial3);
 
+sphere.position.set(0, 30, 0);
+sphere1.position.set(-30, 0, 0);
+sphere2.position.set(30, 0, 0);
+sphere3.position.set(0, -30, 0);
 
-// Function add Stars
-function addStar() {
-  const geometry = new THREE.SphereGeometry(0.25, 24, 24);
-  const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  const star = new THREE.Mesh(geometry, material);
-
-  const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(100));
-  star.position.set(x, y, z);
-  scene.add(star);
-}
-
-Array(200).fill().forEach(addStar);
-
-// Texture mapping for fer
-const ferTexture = new THREE.TextureLoader().load('./images/fer.jfif');
-const fer = new THREE.Mesh(
-  new THREE.BoxGeometry(3, 3, 3),
-  new THREE.MeshBasicMaterial({ map: ferTexture })
-);
-scene.add(fer);
-
-// Create the moon using the moon module
-const moon = createMoon();
-scene.add(moon);
+scene.add(sphere);
+scene.add(sphere1);
+scene.add(sphere2);
+scene.add(sphere3);
 
 // Control the objects position
 function moveCamera() {
   const t = document.body.getBoundingClientRect().top;
-
-  updateMoon(moon);
-
-  fer.rotation.y += 0.01;
-  fer.rotation.z += 0.01;
 
   camera.position.z = t * -0.01;
   camera.position.x = t * -0.0002;
@@ -151,31 +111,91 @@ function moveCamera() {
 }
 document.body.onscroll = moveCamera;
 
-// Animation loop
+// // Animation loop
 function animate() {
-  requestAnimationFrame(animate);
+   requestAnimationFrame(animate);
+   orbit.update(); 
+   renderer.render(scene, camera);
+}
 
-  // Rotation
-  sun.rotation.y += 0.02;
-  mercury.planet.rotateY(0.001);
-  mercury.planetObj.rotateY(0.001);
-  venus.planet.rotateY(0.0012);
-  venus.planetObj.rotateY(0.0015);
-  earth.planet.rotateY(0.012);
-  earth.planetObj.rotateY(0.0012);
-  mars.planet.rotateY(0.013);
-  mars.planetObj.rotateY(0.0019);
-  jupiter.planet.rotateY(0.04);
-  jupiter.planetObj.rotateY(0.0023);
-  saturn.planet.rotateY(0.01);
-  saturn.planetObj.rotateY(0.0021);
-  uranus.planet.rotateY(0.01);
-  uranus.planetObj.rotateY(0.0015);
-  neptune.planet.rotateY(0.01);
-  neptune.planetObj.rotateY(0.001);
 
-  orbit.update();
-  renderer.render(scene, camera);
+function moveCameraSmooth(targetPosition, planet) {
+    const initialPosition = camera.position.clone(); // Store initial position
+    const distance = initialPosition.distanceTo(targetPosition);
+    const framesPerSecond = 60;
+    const zoomDuration = 1;
+    const totalFrames = zoomDuration * framesPerSecond;
+    const zoomSpeed = distance / totalFrames; // Calculate zoom speed
+    // Save the initial camera quaternion (rotation)
+    const initialQuaternion = camera.quaternion.clone();
+
+    // Calculate the direction the camera should face (toward the target)
+    const targetQuaternion = camera.quaternion.clone(); // Clone current rotation
+    camera.lookAt(planet.position); // Temporarily rotate towards the planet
+    targetQuaternion.copy(camera.quaternion); // Save the rotation toward the planet
+    camera.quaternion.copy(initialQuaternion); // Reset camera to initial rotation
+
+
+    let frameCount = 0;
+
+    function animateZoom() {
+        frameCount++;
+
+        // Calculate the interpolation factor
+        const t = frameCount / totalFrames;
+        console.log(t)
+        planet.material.opacity = 1-t;
+        orbit.maxDistance = 40 - 10 * t;
+        orbit.minDistance = 20 - 20 * t;
+        // Interpolate camera rotation using quaternion slerp (smooth rotation)
+        camera.quaternion.slerpQuaternions(initialQuaternion, targetQuaternion, t);
+
+        // Update camera position using linear interpolation
+        camera.position.lerp(initialPosition.clone().lerp(targetPosition, t), zoomSpeed);
+
+        // Check if the animation should continue
+        if (frameCount < totalFrames) {
+            requestAnimationFrame(animateZoom);
+        }else{
+            orbit.maxDistance = 30;
+            orbit.minDistance = 0;
+        }
+    }
+
+    animateZoom(); // Start the zoom animation
+    
+}
+
+function resetCamera(targetPosition, planet) {
+    const framesPerSecond = 60;
+    const zoomDuration = 1;
+    const totalFrames = zoomDuration * framesPerSecond;
+    
+
+    let frameCount = 0;
+
+    function animateTransparency() {
+        frameCount++;
+
+        const t = frameCount / totalFrames;
+
+        planet.material.opacity = 0 + t;
+        orbit.maxDistance = 30 + 10 * t;
+        orbit.minDistance = 0 + 20 * t;
+
+        // Check if the animation should continue
+        if (frameCount < totalFrames) {
+            requestAnimationFrame(animateTransparency);
+        }else{
+            planet.material.opacity = 1;
+            orbit.maxDistance = 40;
+            orbit.minDistance = 20;
+        }
+    }
+
+    camera.position.copy(targetPosition)
+    camera.lookAt(planet)
+    animateTransparency()
 }
 
 // Handle resizing
@@ -183,6 +203,101 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+});
+
+// Set up a raycaster
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+// Listen for mouse clicks
+window.addEventListener('click', (event) => {
+    // Convert the mouse position to normalized device coordinates (-1 to +1) for both axes
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+    // Update the raycaster with the current camera and mouse position
+    raycaster.setFromCamera(mouse, camera);
+  
+    // Calculate objects intersecting the ray
+    const intersects = raycaster.intersectObjects(scene.children);
+  
+    if (intersects.length > 0) {
+      // `intersects[0]` is the first object the ray intersects with (the closest one)
+      const objectClicked = intersects[0].object;
+      
+      switch (objectClicked.name) {
+        case 'Planet':
+            console.log('Planet clicked');
+            
+            moveCameraSmooth(objectClicked.position, objectClicked);
+            break;
+    
+          default:
+            console.log('An unknown object was clicked : ' + objectClicked.name);
+            
+      }
+       
+    }
+  });
+
+// Event listener for keydown events
+window.addEventListener('keydown', (event) => {
+    // Check if the pressed key is the Escape key
+    if (event.key === 'Escape') {
+        const planet = scene.getObjectByName("Planet");
+        console.log('Escape key pressed');
+        
+        resetCamera(cameraDefaultPos, planet);
+    }
+});
+
+const tooltip = document.getElementById('tooltip');
+
+function updateTooltip(content, x, y) {
+    tooltip.innerHTML = content; // Set the HTML content
+    tooltip.style.left = `${x + 10}px`;
+    tooltip.style.top = `${y + 10}px`;
+    //tooltip.innerText = text;
+    tooltip.style.display = 'block';
+  }
+
+  const planetInfo = {
+    name: "Earth",
+    description: "The third planet from the Sun and the only astronomical object known to harbor life.",
+    color: 0x0000ff, // blue
+    texture: './src/img/earth.jpg'
+}
+
+/// Track mouse movement
+window.addEventListener('mousemove', (event) => {
+    // Convert mouse position to normalized device coordinates (-1 to +1)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Update the raycaster with the camera and mouse position
+    raycaster.setFromCamera(mouse, camera);
+
+    // Calculate objects intersecting the ray
+    const intersects = raycaster.intersectObjects(scene.children)
+
+   
+    if (intersects.length > 0) {
+        // `intersects[0]` is the first object the ray intersects with (the closest one)
+        const objectHovered = intersects[0].object;
+        
+        switch (objectHovered.name) {
+          case 'Planet':
+              console.log('Planet hovered');
+              updateTooltip(`${planetInfo.name}<br>${planetInfo.description}`, event.clientX, event.clientY);
+              break;
+      
+            default:
+        }
+         
+    }
+    else{
+        tooltip.style.display = 'none';
+    }
 });
 
 animate();
