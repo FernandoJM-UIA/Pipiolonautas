@@ -1,3 +1,7 @@
+:root{
+  --activeColor: #272927;
+  --unActiveColor: gray;
+}
 body {
   margin : 0;
 }
@@ -7,6 +11,18 @@ canvas{
   top: 0;
   left: 0;
   z-index: -1;
+}
+
+.background {
+  filter: blur(8px);
+  pointer-events: none; 
+  display: none; 
+  height: 100vh;
+  width: 100vw;
+}
+
+.active{
+  display: block;
 }
 
 #toolbar {
@@ -50,173 +66,6 @@ canvas{
   align-items: center;
 }
 
-.button#undoBtn {
-  /* position: absolute;
-  top: 10px;
-  left: 185px; */
-  margin-right: 5px;
-  color: white;
-  background-color: black;
-  font-weight: 500;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  line-height: 2rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  cursor: pointer;
-  text-align: center;
-  margin-right: 0.5rem;
-  display: inline-flex;
-  align-items: center;
-  border: none;
-}
-
-.button#undoBtn:hover {
-  background-color: #333;
-}
-
-.button#undoBtn svg {
-  display: inline;
-  width: 1.3rem;
-  height: 1.3rem;
-  margin-right: 0.75rem;
-  color: white;
-}
-
-.button#undoBtn:focus svg {
-  animation: spin_357 0.5s linear;
-}
-
-@keyframes spin_357 {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.button#newCons {
-  /* position: absolute; */
-  --main-focus: #2d8cf0;
-  --font-color: #f0eded;
-  --bg-color-sub: #525252;
-  --bg-color: black;
-  --main-color: #302e2e;
-  width: 150px;
-  height: 40px;
-  cursor: pointer;
-  color: var(--font-color);
-  display: flex;
-  align-items: center;
-  border: 2px solid var(--main-color);
-  box-shadow: 4px 4px var(--main-color);
-  background-color: var(--bg-color);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.button#newCons, #newCons .button__icon, #newCons .button__text {
-  transition: all 0.3s;
-}
-
-.button#newCons #newCons .button__text {
-  transform: translateX(22px);
-  color: var(--font-color);
-  font-weight: 600;
-}
-
-.button#newCons .button__icon {
-  position: absolute;
-  transform: translateX(107px);
-  height: 70%;
-  width: 30px;
-  background-color: var(--bg-color-sub);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.button#newCons .svg {
-  width: 20px;
-  fill: var(--main-color);
-}
-
-.button#newCons:hover {
-  background: var(--bg-color);
-}
-
-.button#newCons:hover .button__text {
-  color: transparent;
-}
-
-.button#newCons:hover .button__icon {
-  width: 148px;
-  transform: translateX(0);
-}
-
-.button#newCons:active {
-  transform: translate(3px, 3px);
-  box-shadow: 0px 0px var(--main-color);
-}
-
-button#saveCons{
-  font-size: 15px;
-  background: #212121;
-  color: white;
-  fill: rgb(247, 242, 242);
-  padding: 0.5em .6em;
-  padding-left: 0.7em;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  border: none;
-  border-radius: 15px;
-  font-weight: 1000;
-  margin: 0 10px;
-  /* position: absolute;
-  top: 15px;
-  left: 500px; */
-}
-
-button#saveCons span {
-  display: block;
-  margin-left: 0.3em;
-  transition: all 0.3s ease-in-out;
-}
-
-button#saveCons svg {
-  display: block;
-  transform-origin: center center;
-  transition: transform 0.3s ease-in-out;
-}
-
-button#saveCons:hover {
-  background: #000;
-}
-
-button#saveCons:hover .svg-wrapper {
-  transform: scale(1.25);
-  transition: 0.5s linear;
-}
-
-button#saveCons:hover svg {
-  transform: translateX(1.2em) scale(1.1);
-  fill: #fff;
-}
-
-button#saveCons:hover span {
-  opacity: 0;
-  transition: 0.5s linear;
-}
-
-button#saveCons:active {
-  transform: scale(0.95);
-}
-
 /* Form to save Const */
 .form-container#saveForm{
   transition: ease 0.3s;
@@ -230,7 +79,7 @@ button#saveCons:active {
   border: 2px solid transparent;
   padding: 32px 24px;
   font-size: 14px;
-  font-family: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: white;
   display: none;
   flex-direction: column;
@@ -260,7 +109,7 @@ button#saveCons:active {
   margin-bottom: 5px;
   color: #717171;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .form-container#saveForm .form-group input {
@@ -330,15 +179,28 @@ button#saveCons:active {
   border-color: #fff;
 }
 
+/* General Button */
 .paste-button {
   position: relative;
+  pointer-events: all;
   margin: 0 5px;
   display: block;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: ease 0.8s;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+}
+.paste-button.active{
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+  transition: ease-in 0.5s;
+  scale: 0.7;
+}
+.paste-button:hover{
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  scale: 0.88;
 }
 
 .buttonGeneral{
-  background-color: #272927;
+  background-color: var(--activeColor);
   color: #d4cfcf;
   padding: 10px 15px;
   font-size: 15px;
@@ -352,16 +214,16 @@ button#saveCons:active {
 
 .form-container#uploadContainer {
   transition: ease 0.3s;
-  /* position: absolute;
+  position: absolute;
   top: 50%;
-  left: 50%; */
+  left: 50%;
   transform: translate(-50%, -50%);
   width: 400px;
-  background: #272927;
+  background: var(--activeColor);
   border: 2px solid transparent;
   padding: 32px 24px;
   font-size: 14px;
-  font-family: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;;
   color: white;
   display: none;
   flex-direction: column;
@@ -369,6 +231,7 @@ button#saveCons:active {
   box-sizing: border-box;
   border-radius: 16px;
   margin: 0 5px;
+  transition: ease 1s;
 }
 .custum-file-upload {
   height: 200px;
@@ -381,10 +244,11 @@ button#saveCons:active {
   align-items: center;
   justify-content: center;
   border: 2px dashed #e8e8e8;
-  background-color: #272927;
+  background-color: var(--activeColor);
   padding: 1.5rem;
   border-radius: 10px;
-  box-shadow: 0px 48px 35px -48px #e8e8e8;
+  box-shadow: rgba(114, 106, 106, 0.45) 0px 25px 20px -20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #cancelUpload {
@@ -438,46 +302,11 @@ button#saveCons:active {
   display: none;
 }
 
-/* UploadFile */
-.button#uploadButton {
-  width: 10em;
-  height: 3em;
-  border-radius: 8px;
-  border: 0.15em solid rgb(28, 28, 29);
-  color: rgb(241, 239, 243);
-  background-color: #000000d3;
-  transition: all 0.5s ease;
-  align-self: flex-end;
-  cursor: pointer;
-}
-
-.button#uploadButton .text {
-  display: none
-}
-
-.button#uploadButton:hover>.text {
-  display: block;
-}
-
-.button#uploadButton:hover>svg {
-  display: none;
-}
-
-.button#uploadButton:hover {
-  background-color: rgb(22, 22, 22);
-  color: #fff
-}
-
-.button#uploadButton svg {
-  width: 1.5em;
-  margin-top: 3px;
-}
-
 /* Pencil Object */
 .toggle-cont#pencil-icon {
   --primary: #54a8fc;
   --light: #d9d9d9;
-  --dark: #272927;
+  --dark: var(--activeColor);
   --gray: #414344;
 
   /* position: relative; */
@@ -486,7 +315,7 @@ button#saveCons:active {
   width: fit-content;
   margin: 0 5px;
   /* height: 28px; */
-
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
   border-radius: 9999px;
 }
 
@@ -668,7 +497,9 @@ button#saveCons:active {
     }
   }
 }
-
-#uploadButton{
-  align-self: flex-end;
+.unableButton {
+  --activeColor: var(--unActiveColor); 
+  pointer-events: none;
+  opacity: .9;
 }
+

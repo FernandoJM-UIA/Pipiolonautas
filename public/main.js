@@ -90,6 +90,7 @@ animate();
 
 // ========= END SCENE SETUP =========
 const pencilIcon = document.getElementById('pencil-icon');
+const checkbox = document.getElementById('toggle');
 let cameraControlsActive = true; // Camera status
 const selectedObjects = [];
 const raycaster = new THREE.Raycaster();
@@ -102,17 +103,29 @@ const constellations = [];
 let line;
 let iCons = 1;
 
+
+desactiveButton();
 document.addEventListener('mousedown', onMouseDown);
-pencilIcon.addEventListener('click', () => {
-  toggleCameraControl();
-  showSaveForm();
+
+// Event listener for checkbox changes
+checkbox.addEventListener('change', function() {
+  if (this.checked) {
+    showSaveForm();
+    cameraControlsActive = false;
+    toggleCameraControl();
+    activeButton();
+  }else{
+    cameraControlsActive = true;
+    toggleCameraControl();
+    hideSaveForm();
+    deleteDrawnLineTotal();
+    desactiveButton();
+  }
 });
 
 
 // Add the toggleCameraControl function
 function toggleCameraControl() {
-  cameraControlsActive = !cameraControlsActive; // Toggle state
-
   // Enable or disable camera controls
   if (cameraControlsActive) {
       controls.enableRotate = true; // Allow camera rotation
@@ -166,7 +179,6 @@ function onMouseDown(event) {
           linePoints.push(point);
           drawLine(true, 0xcdf0f1, 5);
           //drawLineSegments(0xcdf0f1, 5);
-          printSelectedObjects();
           console.log("Points" + linePoints);
       }
   } else {
@@ -174,6 +186,27 @@ function onMouseDown(event) {
   }
 }
 
+// Function to undo the last point
+function undoLastPoint() {
+  if (linePoints.length > 0) {
+      linePoints.pop(); // Remove the last point from the array
+      console.log('Last point undone.');
+      console.log(linePoints);
+
+      // Remove the current line before redrawing it with updated points
+      const currentLine = scene.getObjectByName('constellationLine' + iCons);
+      if (currentLine) {
+          scene.remove(currentLine); // Remove the previous line
+      }
+
+      // Redraw the line with the updated points
+      drawLine(false, 0xcdf0f1, 5); // Ensure removePrevious is false, so it doesn't remove the new line
+  } else {
+      console.log('No points to undo.');
+  }
+}
+
+// Function to draw the line
 function drawLine(removePrevious = true, lineColor = 0xcdf0f1, lineThickness = 5) {
   const geometry = new THREE.BufferGeometry().setFromPoints(linePoints);
   const material = new THREE.LineBasicMaterial({ 
@@ -182,56 +215,22 @@ function drawLine(removePrevious = true, lineColor = 0xcdf0f1, lineThickness = 5
   });
 
   const line = new THREE.Line(geometry, material);
-  line.name = 'constellationLine'+iCons;
+  line.name = 'constellationLine' + iCons;
+  console.log(line.name + " name of line");
+  
   // Set raycast to null so the line itself cannot be selected
   line.raycast = () => {};
 
   // If removePrevious is true, remove the previous drawn line (if any)
-  if (removePrevious && scene.getObjectByName(line.name)) {
-    scene.remove(scene.getObjectByName(line.name));
+  const existingLine = scene.getObjectByName('constellationLine' + iCons);
+  if (removePrevious && existingLine) {
+    scene.remove(existingLine);
   }
-  scene.add(line); // Add the line to the scene
+  
+  // Add the new line to the scene
+  scene.add(line);
 }
 
-function drawLineSegments(lineColor = 0xcdf0f1, lineThickness = 1) {
-  // Create a new BufferGeometry
-  const geometry = new THREE.BufferGeometry();
-
-  // Ensure linePoints contains pairs of points for segments
-  const vertices = [];
-  for (let i = 0; i < linePoints.length - 1; i++) {
-    vertices.push(linePoints[i].x, linePoints[i].y, linePoints[i].z); // Start point
-    vertices.push(linePoints[i + 1].x, linePoints[i + 1].y, linePoints[i + 1].z); // End point
-  }
-
-  // Set the vertices to the geometry
-  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-
-  // Create material with variable color
-  const material = new THREE.LineBasicMaterial({
-      color: lineColor
-  });
-
-  const lineSegments = new THREE.LineSegments(geometry, material);
-
-  // Set raycast to null so the line itself cannot be selected
-  lineSegments.raycast = () => {};
-
-  // Remove the previous line if it exists
-  const existingLine = scene.getObjectByName('drawingLine');
-  if (existingLine) {
-      scene.remove(existingLine);
-  }
-
-  lineSegments.name = 'drawingLine'; // Set a name for easy identification and removal later
-  scene.add(lineSegments); // Add the line to the scene
-}
-
-
-function printSelectedObjects(){
-  const selectedNames = selectedObjects.map(obj => obj.name);
-  //console.log('Selected Objects', selectedNames);
-}
 
 function deleteDrawnLine() {
   // Use the correct name pattern for the last drawn constellation line
@@ -241,7 +240,7 @@ function deleteDrawnLine() {
       console.log('Drawn line was deleted!');
       linePoints.length = 0; // Clear the linePoints array
       iCons--;
-      console.log("iCons" +iCons);
+      console.log(linePoints + iCons);
       constSaved.pop();
   } else {
       console.log('No line to delete.');
@@ -259,50 +258,40 @@ function deleteDrawnLineTotal() {
   } else {
       console.log('No lines to delete.');
   }
+  lockDraw();
 }
 
 document.getElementById('deleteOne').addEventListener('click', deleteDrawnLine);
 document.getElementById('delete').addEventListener('click', deleteDrawnLineTotal);
 
-// Function to undo the last point
-function undoLastPoint() {
-  if (linePoints.length > 0) {
-      linePoints.pop(); // Remove the last point from the array
-      console.log('Last point undone.');
-      console.log(linePoints);
-      // Remove the current line before redrawing it with updated points
-      const currentLine = scene.getObjectByName('constellationLine'+iCons);
-      if (currentLine) {
-          scene.remove(currentLine); // Remove the previous line
-      }
-      drawLine(); // Redraw the line with the updated points, without removing previous lines
-  } else {
-      console.log('No points to undo.');
-  }
-}
 
 // Add an event listener to the Undo button
 document.getElementById('undoBtn').addEventListener('click', undoLastPoint);
 
 
-// Functio to create a new constelation
+// Function to create a new constellation
 function createNewConstellation(){
-  // Check if there are point to draw a line
+  // Check if there are points to draw a line
   if(linePoints.length > 0){
     constellations.push([...linePoints]); // Copy the current line points
-    console.log('New Constellation created with point', linePoints);
-    drawLine(true);
-    // Clear the points for the next line
+    console.log('New Constellation created with points', linePoints);
+
+    // Clear the linePoints array for the next line
     linePoints.length = 0;
+    
+    // Draw the line without removing the previous ones
+    drawLine(false); // Pass false so previous lines are not removed
+    
+    // Increment the index for the next constellation
     iCons++;
-  }else{
+  } else {
     console.log('No points to create a constellation.');
   }
 }
 
 document.getElementById('newCons').addEventListener('click', function() {
   showSaveForm();
-  if(preSave === "complete")
+  // if(preSave === "complete")
     createNewConstellation();
 });
 
@@ -330,6 +319,9 @@ function saveCanvasImage(){
 function showSaveForm() {
   document.getElementById('saveForm').style.display = 'flex';
 }
+function hideSaveForm(){
+  document.getElementById('saveForm').style.display = 'none';
+}
 
 // Cancel the save action
 function cancelSave() {
@@ -338,14 +330,27 @@ function cancelSave() {
   document.getElementById('constellationDesc').value = '';
 }
 
-document.getElementById('cancelSave').addEventListener('click', cancelSave);
+document.getElementById('cancelSave').addEventListener('click', function() {
+  cancelSave(); 
+  if(iCons <= 0){
+    lockDraw();
+  }
+});
+
+function lockDraw(){
+  toggleCameraControl();
+  checkbox.checked = false;
+  desactiveButton();
+  cameraControlsActive = true;
+  toggleCameraControl();
+}
 
 // prefilled save Form
 function preSave(event){
+  event.preventDefault();
   const name = document.getElementById('constellationName').value.trim();
   const description = document.getElementById('constellationDesc').value.trim();
 
-  event.preventDefault();
   if(!name || !description){
     alert("Please fill all fields");
     return;
@@ -384,7 +389,7 @@ function save(){
    const url = URL.createObjectURL(blob);
    const a = document.createElement('a');
    a.href = url;
-   a.download = `${name}.json`; // Use the constellation name for the file name
+   a.download = constellationData.name+".json"; // Use the constellation name for the file name
    document.body.appendChild(a);
    a.click();
    document.body.removeChild(a);
@@ -434,6 +439,7 @@ document.getElementById('file').addEventListener('change', function(event) {
     // Read the file as text
     reader.readAsText(file);
   }
+  closeUploadFiles();
 });
 
 // Function to draw the constellation based on uploaded data points
@@ -454,4 +460,47 @@ function drawLineFromData(linePoints, removePrevious = true, lineColor = 0xcdf0f
   }
 
   scene.add(line); // Add the line to the scene
+}
+
+function desactiveButton(){
+  const deleteOne = document.getElementById('deleteOne');
+  const deleteAll = document.getElementById('delete');
+  const undo = document.getElementById('undoBtn');
+  const newCons = document.getElementById('newCons');
+  const saveCons = document.getElementById('saveCons');
+
+  deleteOne.classList.add('unableButton');
+  deleteAll.classList.add('unableButton');
+  undo.classList.add('unableButton');
+  newCons.classList.add('unableButton');
+  saveCons.classList.add('unableButton');
+}
+
+function activeButton(){
+  const deleteOne = document.getElementById('deleteOne');
+  const deleteAll = document.getElementById('delete');
+  const undo = document.getElementById('undoBtn');
+  const newCons = document.getElementById('newCons');
+  const saveCons = document.getElementById('saveCons');
+
+  if (deleteOne.classList.contains('unableButton')) {
+    deleteOne.classList.remove('unableButton');
+  }
+  if (deleteAll.classList.contains('unableButton')) {
+    deleteAll.classList.remove('unableButton');
+  }
+  if (undo.classList.contains('unableButton')) {
+    undo.classList.remove('unableButton');
+  }
+  if (newCons.classList.contains('unableButton')) {
+    newCons.classList.remove('unableButton');
+  }
+  if (saveCons.classList.contains('unableButton')) {
+    saveCons.classList.remove('unableButton');
+  }
+}
+
+function enableBackground(){
+  const background = document.getElementById('saveCons');
+  deleteOne.classList.add('unableButton');
 }
