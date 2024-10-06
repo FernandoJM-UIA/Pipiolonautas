@@ -113,6 +113,8 @@ document.body.onscroll = moveCamera;
 
 // // Animation loop
 function animate() {
+    earth.planet.rotateY(0.001);
+    earth.planetObj.rotateY(0.001);
    requestAnimationFrame(animate);
    orbit.update(); 
    renderer.render(scene, camera);
