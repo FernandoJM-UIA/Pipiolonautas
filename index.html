@@ -11,89 +11,13 @@
     <button id="updateButton">Update Models</button>
     <canvas id="bg"></canvas>
     <div id="tooltip" class="tooltip"></div>
+  
+    <input type="text" id="searchBar" placeholder="Buscar planetas..." />
+    <div id="dropdown" class="dropdown"></div>
+    <div id="planetInfo"></div>
+
     <script type="module" src="/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-
-    <main>
-      <!-- Header -->
-      <header>
-        <h1>NASA Space Exploration</h1>
-        <p>Welcome to the wonders of space</p>
-      </header>
-
-      <!-- Main Section -->
-      <section class="intro">
-          <h2>Space: The Final Frontier</h2>
-          <p>
-              Space exploration has been humanity's greatest quest for knowledge. We are driven by the desire to explore the unknown.
-              Join us in discovering the mysteries of the cosmos, where we travel beyond Earth to the stars.
-          </p>
-      </section>
-
-      <!-- Animation Section -->
-      <section class="animation">
-          <h2>NASA Space Animation</h2>
-      </section>
-
-      <!-- Section: NASA Missions -->
-      <section class="missions">
-          <h2>Famous NASA Missions</h2>
-          <div class="mission">
-              <h3>Apollo 11</h3>
-              <p>
-                  The first successful moon landing by NASA, where Neil Armstrong took mankind’s first steps on the lunar surface. 
-                  A historic achievement in space exploration on July 20, 1969.
-              </p>
-          </div>
-          <div class="mission">
-              <h3>Voyager 1</h3>
-              <p>
-                  Launched in 1977, Voyager 1 is the farthest spacecraft from Earth, exploring interstellar space and sending back data 
-                  from beyond our solar system.
-              </p>
-          </div>
-          <div class="mission">
-              <h3>Mars Rover Perseverance</h3>
-              <p>
-                  Perseverance, launched in 2020, is currently exploring the surface of Mars, searching for signs of past life and 
-                  preparing the way for future human exploration.
-              </p>
-          </div>
-      </section>
-
-      <!-- Section: The Solar System -->
-      <section class="solar-system">
-          <h2>Exploring Our Solar System</h2>
-          <p>
-              NASA's missions have reached nearly every corner of our solar system. From Mercury to Pluto, spacecraft have ventured 
-              into the unknown, revealing incredible details about planets, moons, and other celestial bodies.
-          </p>
-          <ul>
-              <li><strong>Mercury:</strong> The closest planet to the Sun.</li>
-              <li><strong>Venus:</strong> Earth's "sister" planet, but with a hostile environment.</li>
-              <li><strong>Mars:</strong> The Red Planet, target of ongoing exploration for potential signs of life.</li>
-              <li><strong>Jupiter:</strong> The gas giant, famous for its Great Red Spot.</li>
-              <li><strong>Saturn:</strong> Known for its stunning ring system.</li>
-              <li><strong>Uranus:</strong> An ice giant with a unique sideways rotation.</li>
-              <li><strong>Neptune:</strong> The farthest known planet in our solar system.</li>
-              <li><strong>Pluto:</strong> Once considered the ninth planet, now classified as a dwarf planet.</li>
-          </ul>
-      </section>
-
-      <!-- Section: Future of Space Exploration -->
-      <section class="future">
-          <h2>The Future of Space Exploration</h2>
-          <p>
-              The future of space exploration holds the promise of new discoveries, human settlements on other planets, and possibly 
-              even contact with extraterrestrial life. NASA is working on the Artemis program, which aims to land the first woman and the next 
-              man on the Moon by 2024. The goal is to build a sustainable presence on the Moon and use it as a launch pad for Mars.
-          </p>
-      </section>
-
-      <!-- Footer Section -->
-      <footer>
-          <p>NASA Space Animation Test | Created by: Fjm</p>
-      </footer>
-    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>    
   </body>
 </html>
